@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "prebuild": "node scripts/gen-seo.mjs",
+    "build:static": "node scripts/build-static.mjs",
+    "deploy": "npm run build:static && npx wrangler@3 pages deploy out --project-name aryanaligeti --branch main"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
