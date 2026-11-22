@@ -144,7 +144,7 @@ export default function EditsHero() {
           {editTracks.length > 0 ? (
             <Reveal delay={0.3} className="lg:col-span-4">
               <p className="eyebrow mb-4">Tracks</p>
-              <ul className="overflow-hidden rounded-md border border-line bg-ink/80 fine:bg-ink/55 fine:backdrop-blur-sm">
+              <ul className="overflow-hidden rounded-md border border-line bg-ink/80">
                 {editTracks.map((group, i) => {
                   return (
                     <li key={group.title} className="flex border-b border-line last:border-b-0">

@@ -10,7 +10,7 @@ export default function EditsCta() {
   return (
     <section aria-labelledby="edits-cta-title" className="relative pb-24 md:pb-32">
       <div className="container-x">
-        <div className="relative overflow-hidden rounded-2xl border border-line bg-ink/85 px-6 py-16 fine:bg-ink/60 fine:backdrop-blur-md md:px-14 md:py-24">
+        <div className="relative overflow-hidden rounded-2xl border border-line bg-ink/85 px-6 py-16 md:px-14 md:py-24">
           <HudFrame rec recLabel="NEXT IN QUEUE" timecode size={20} inset={14} />
           <div
             aria-hidden="true"

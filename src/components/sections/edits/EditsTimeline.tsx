@@ -171,7 +171,7 @@ export default function EditsTimeline({ all, visible, gridRef, onSelect }: Edits
   const clipCount = sequence.clips.length;
 
   return (
-    <div ref={rootRef} className="overflow-hidden rounded-lg border border-line bg-ink/90 shadow-[0_24px_60px_-30px_rgb(0_0_0/0.9)] fine:bg-ink/80 fine:backdrop-blur-md">
+    <div ref={rootRef} className="overflow-hidden rounded-lg border border-line bg-ink/90 shadow-[0_24px_60px_-30px_rgb(0_0_0/0.9)]">
       {/* Header strip */}
       <div className="flex items-center justify-between gap-3 border-b border-line px-3 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-mute md:px-4">
         <span className="flex min-w-0 items-center gap-2">

@@ -140,7 +140,7 @@ export default function ProjectCard({ project, index, total, onOpen, buttonRef }
           />
 
           {featured ? (
-            <span className="absolute right-3 top-3 z-10 rounded-full border border-tech-2/40 bg-ink/85 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-tech-2 fine:bg-ink/70 fine:backdrop-blur-sm">
+            <span className="absolute right-3 top-3 z-10 rounded-full border border-tech-2/40 bg-ink/85 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-tech-2">
               Featured
             </span>
           ) : null}

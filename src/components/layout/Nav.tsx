@@ -430,9 +430,9 @@ export default function Nav() {
         <div
           aria-hidden="true"
           className={cn(
-            "pointer-events-none absolute inset-0 -z-10 border-b border-transparent bg-ink/0 transition-[background-color,border-color,backdrop-filter] duration-500",
+            "pointer-events-none absolute inset-0 -z-10 border-b border-transparent bg-ink/0 transition-[background-color,border-color] duration-500",
             !open &&
-              "group-data-[scrolled=true]/nav:border-line group-data-[scrolled=true]/nav:bg-ink/85 fine:group-data-[scrolled=true]/nav:bg-ink/60 fine:group-data-[scrolled=true]/nav:backdrop-blur-md",
+              "group-data-[scrolled=true]/nav:border-line group-data-[scrolled=true]/nav:bg-ink/85",
           )}
         />
         <nav aria-label="Primary" className="container-x flex h-[var(--nav-height)] items-center justify-between gap-6">

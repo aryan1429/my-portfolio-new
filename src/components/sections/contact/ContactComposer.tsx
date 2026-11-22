@@ -150,7 +150,7 @@ export default function ContactComposer() {
         </div>
 
         <Reveal delay={0.08} blur={0} className="lg:col-span-7">
-          <div className="relative rounded-[1.75rem] border border-line bg-ink/85 px-6 pb-12 pt-10 fine:bg-ink/60 fine:backdrop-blur-md sm:p-10 md:p-12">
+          <div className="relative rounded-[1.75rem] border border-line bg-ink/85 px-6 pb-12 pt-10 sm:p-10 md:p-12">
             <HudFrame label="Draft — mailto" resolution="No backend" size={16} inset={10} />
             <form noValidate onSubmit={onSubmit} aria-describedby={id("hint")} className="relative flex flex-col gap-10">
               <p id={id("hint")} className="sr-only">

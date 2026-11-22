@@ -29,7 +29,7 @@ export default function CategoryFilter({ value, onChange, className }: CategoryF
       <div
         role="group"
         aria-label="Filter edits by category"
-        className={cn("inline-flex flex-wrap items-center gap-1 rounded-full border border-line bg-ink/85 p-1 fine:bg-ink/60 fine:backdrop-blur-md", className)}
+        className={cn("inline-flex flex-wrap items-center gap-1 rounded-full border border-line bg-ink/85 p-1", className)}
       >
         {options.map((opt) => {
           const active = opt.id === value;

@@ -93,7 +93,7 @@ export default function TechHeader() {
         {/* HUD readout */}
         <motion.aside
           aria-label="Project index summary"
-          className="relative overflow-hidden rounded-2xl border border-line bg-ink-2/80 p-5 fine:bg-ink-2/55 fine:backdrop-blur-md md:col-span-5 md:col-start-8 lg:col-span-5 lg:col-start-8 md:p-6"
+          className="relative overflow-hidden rounded-2xl border border-line bg-ink-2/80 p-5 md:col-span-5 md:col-start-8 lg:col-span-5 lg:col-start-8 md:p-6"
           initial={reduced ? false : { opacity: 0, y: 30, filter: "blur(10px)" }}
           animate={show ? { opacity: 1, y: 0, filter: "blur(0px)" } : undefined}
           transition={{ duration: 1, ease: ease.out, delay: 0.45 }}

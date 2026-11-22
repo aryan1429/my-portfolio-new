@@ -77,7 +77,7 @@ Renders as `inline-block`; pair with `font-mono` for the tightest look.
 
 ## Reveal
 
-Fade + rise + de-blur when scrolled into view (Framer Motion).
+Fade + rise (optional de-blur) when scrolled into view (Framer Motion).
 
 | prop | type | default |
 |---|---|---|
@@ -85,7 +85,7 @@ Fade + rise + de-blur when scrolled into view (Framer Motion).
 | `as` | `"div" \| "section" \| "article" \| "aside" \| "header" \| "footer" \| "figure" \| "li" \| "ul" \| "ol" \| "p" \| "span"` | `"div"` |
 | `delay` | seconds | `0` |
 | `y` | px start offset | `28` |
-| `blur` | px start blur (`0` = none) | `8` |
+| `blur` | px start blur (`0` = none) | `0` |
 | `duration` | seconds | `0.9` |
 | `amount` | visible fraction to trigger | `0.2` |
 | `repeat` | replay on every re-entry | `false` |
@@ -99,7 +99,7 @@ Fade + rise + de-blur when scrolled into view (Framer Motion).
 ))}
 ```
 
-Tip: use `blur={0}` on very large blocks (blur filters on full-width sections are costly).
+Tip: blur is opt-in — animated filters re-render the layer every frame over the WebGL canvas, so keep it for small elements only.
 
 ## MagneticButton
 

@@ -118,7 +118,7 @@ export default function ContactHero() {
       </div>
 
       {profile.roles.length > 0 && (
-        <motion.div {...fadeUp(1.2)} className="relative border-y border-line bg-ink/60 fine:bg-ink/30 fine:backdrop-blur-[2px]">
+        <motion.div {...fadeUp(1.2)} className="relative border-y border-line bg-ink/60">
           <Marquee
             items={profile.roles}
             speed={45}

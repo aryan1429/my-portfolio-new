@@ -153,7 +153,7 @@ export default function ContactMeta() {
           title={city ? `Based in\n${city}.` : "Coordinates."}
         />
 
-        <dl className="mt-14 grid overflow-hidden rounded-[1.75rem] border border-line bg-ink/80 fine:bg-ink/50 fine:backdrop-blur-sm md:mt-20 lg:grid-cols-12">
+        <dl className="mt-14 grid overflow-hidden rounded-[1.75rem] border border-line bg-ink/80 md:mt-20 lg:grid-cols-12">
           {location && (
             <Reveal blur={0} className="flex flex-col gap-4 border-b border-line p-7 sm:p-9 lg:col-span-3 lg:border-b-0 lg:border-r">
               <dt className="eyebrow flex items-center gap-2">

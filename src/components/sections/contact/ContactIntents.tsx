@@ -110,7 +110,7 @@ export default function ContactIntents() {
                   aria-label={`Email about ${plainTitle} — opens your mail app with a brief template`}
                   wrapperClassName="flex w-full"
                   className={cn(
-                    "group relative flex w-full overflow-hidden rounded-[1.75rem] border border-line bg-ink/80 fine:bg-ink/55 fine:backdrop-blur-sm transition-colors duration-500",
+                    "group relative flex w-full overflow-hidden rounded-[1.75rem] border border-line bg-ink/80 transition-colors duration-500",
                     tone.border,
                   )}
                   labelClassName="flex min-h-[22rem] w-full flex-col items-stretch justify-between gap-10 p-7 text-left sm:p-9 md:min-h-[27rem] md:p-10"

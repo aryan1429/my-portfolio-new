@@ -3,7 +3,7 @@
 import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Canvas, useFrame, useThree, type RootState } from "@react-three/fiber";
-import { AdaptiveDpr, PerformanceMonitor, type PerformanceMonitorApi } from "@react-three/drei";
+import { PerformanceMonitor } from "@react-three/drei";
 import { installPointerListener } from "@/lib/pointer";
 import { useIsTouch, usePrefersReducedMotion } from "@/lib/motion";
 import SceneErrorBoundary from "./SceneErrorBoundary";
@@ -17,6 +17,7 @@ import {
   type SceneKey,
 } from "./director";
 import { useIsSmallScreen, usePageVisible, useSceneCovered } from "./hooks";
+import { useSceneDimmed } from "./quality";
 import { BACKGROUND } from "./palette";
 import EditsStudioScene from "./scenes/EditsStudioScene";
 import HubScene from "./scenes/HubScene";
@@ -30,8 +31,6 @@ import type { Detail } from "./types";
 const Effects = lazy(() => import("./Effects"));
 
 interface PerfState {
-  /** Upper bound of the device-pixel-ratio range. */
-  dpr: number;
   /** Post-processing enabled (desktop only, dropped when the monitor reports a decline). */
   fx: boolean;
   /** Set once the monitor gives up (fallback) — quality stays low. */
@@ -41,6 +40,29 @@ interface PerfState {
 const BG_ARGS: [string] = [BACKGROUND.home];
 const CAMERA = { position: [0, 0, 9] as [number, number, number], fov: 40, near: 0.1, far: 80 };
 const GL = { antialias: false, alpha: false, stencil: false, powerPreference: "high-performance" as const };
+
+/**
+ * While dimmed the loop runs on demand and this ticker requests frames at most every ~1/60 s, so a
+ * 120/144 Hz display does not spend its whole GPU budget on a scene sitting under the scrim.
+ */
+function FrameCap({ fps }: { fps: number }) {
+  const invalidate = useThree((s) => s.invalidate);
+  useEffect(() => {
+    const interval = 1000 / fps;
+    let raf = 0;
+    let last = 0;
+    const tick = (t: number) => {
+      if (t - last >= interval - 1.5) {
+        last = t;
+        invalidate();
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [fps, invalidate]);
+  return null;
+}
 
 /** Pushes the active route into the director and advances it before any scene updates. */
 function SceneDirector({ sceneKey, reduced }: { sceneKey: SceneKey; reduced: boolean }) {
@@ -84,7 +106,9 @@ export default function Scene({ onFatal }: SceneProps) {
   const covered = useSceneCovered();
   const desktop = !touch && !small;
   const detail: Detail = desktop ? "high" : "low";
-  const maxDpr = desktop ? 1.75 : 1.5;
+  const dimmed = useSceneDimmed();
+  // Fixed DPR range (no mid-scroll flip-flopping, which reallocates every render target).
+  const maxDpr = dimmed ? 1 : desktop ? 1.5 : 1.25;
 
   // Scenes mount on first visit and then stay mounted (hidden at zero presence).
   const [mounted, setMounted] = useState<Record<SceneGroup, boolean>>(() => ({
@@ -94,7 +118,7 @@ export default function Scene({ onFatal }: SceneProps) {
   }));
   if (!mounted[activeGroup]) setMounted({ ...mounted, [activeGroup]: true });
 
-  const [perf, setPerf] = useState<PerfState>({ dpr: 1.75, fx: true, locked: false });
+  const [perf, setPerf] = useState<PerfState>({ fx: true, locked: false });
   const [ready, setReady] = useState(false);
 
   const fatal = useRef(onFatal);
@@ -118,9 +142,6 @@ export default function Scene({ onFatal }: SceneProps) {
     setReady(true);
   }, []);
 
-  const onPerfChange = useCallback(({ factor }: PerformanceMonitorApi) => {
-    setPerf((p) => (p.locked ? p : { ...p, dpr: Math.round((1 + factor * 0.75) * 100) / 100 }));
-  }, []);
   const onIncline = useCallback(() => {
     setPerf((p) => (p.locked || p.fx ? p : { ...p, fx: true }));
   }, []);
@@ -128,12 +149,14 @@ export default function Scene({ onFatal }: SceneProps) {
     setPerf((p) => (p.fx ? { ...p, fx: false } : p));
   }, []);
   const onFallback = useCallback(() => {
-    setPerf({ dpr: 1, fx: false, locked: true });
+    setPerf({ fx: false, locked: true });
   }, []);
 
   // Stop rendering while the tab is hidden or an opaque overlay (menu, viewer, modal) covers the canvas.
-  const frameloop = reduced ? "demand" : visible && !covered ? "always" : "never";
-  const dprHigh = Math.min(perf.dpr, maxDpr);
+  // Dimmed: on-demand loop driven by <FrameCap/> at ~60 fps.
+  const running = visible && !covered;
+  const frameloop = reduced || (running && dimmed) ? "demand" : running ? "always" : "never";
+  const dprHigh = maxDpr;
   const dprLow = Math.min(1, dprHigh);
   const fx = desktop && perf.fx;
 
@@ -153,15 +176,13 @@ export default function Scene({ onFatal }: SceneProps) {
       >
         <color attach="background" args={BG_ARGS} />
         <SceneDirector sceneKey={sceneKey} reduced={reduced} />
+        {running && dimmed && !reduced ? <FrameCap fps={60} /> : null}
         <PerformanceMonitor
-          factor={1}
           flipflops={3}
-          onChange={onPerfChange}
           onIncline={onIncline}
           onDecline={onDecline}
           onFallback={onFallback}
         />
-        <AdaptiveDpr />
 
         <Suspense fallback={null}>
           {mounted.hub ? (
@@ -183,7 +204,7 @@ export default function Scene({ onFatal }: SceneProps) {
 
         {fx ? (
           <Suspense fallback={null}>
-            <Effects />
+            <Effects enabled={!dimmed} />
           </Suspense>
         ) : null}
       </Canvas>

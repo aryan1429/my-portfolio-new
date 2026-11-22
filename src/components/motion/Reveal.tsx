@@ -39,14 +39,14 @@ export interface RevealProps {
 }
 
 /**
- * Fade + rise + de-blur on enter. Transform/opacity/filter only → zero layout shift.
+ * Fade + rise (optional de-blur) on enter. Transform/opacity/filter only → zero layout shift.
  * Waits for page transitions to uncover the screen before playing.
  */
 export default function Reveal({
   children,
   delay = 0,
   y = 28,
-  blur = 8,
+  blur = 0,
   duration = 0.9,
   className,
   as = "div",
@@ -62,8 +62,10 @@ export default function Reveal({
 
   const Component = motion[as];
 
-  const hidden = { opacity: 0, y, filter: blur > 0 ? `blur(${blur}px)` : "blur(0px)" };
-  const visible = { opacity: 1, y: 0, filter: "blur(0px)" };
+  // Blur is opt-in: an animated filter re-renders the element's layer every frame (and blur(0px)
+  // still keeps an effect node alive), which is costly over the always-animating WebGL canvas.
+  const hidden = blur > 0 ? { opacity: 0, y, filter: `blur(${blur}px)` } : { opacity: 0, y };
+  const visible = blur > 0 ? { opacity: 1, y: 0, filter: "none" } : { opacity: 1, y: 0 };
 
   const base: Transition = { duration, delay, ease: ease.out };
   const transition: Transition = reduced

@@ -35,7 +35,7 @@ export default function EditsPage() {
     <>
       <EditsHero />
       {craft.length > 0 ? (
-        <div aria-hidden="true" className="border-y border-line bg-ink/70 py-5 fine:bg-ink/40 fine:backdrop-blur-[2px]">
+        <div aria-hidden="true" className="border-y border-line bg-ink/70 py-5">
           <Marquee
             items={craft}
             speed={70}

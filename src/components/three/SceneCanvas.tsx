@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import SceneErrorBoundary from "./SceneErrorBoundary";
 import { useWebGLSupport } from "./hooks";
+import { DIM_OFF, DIM_ON, setSceneDimmed } from "./quality";
 
 // The whole WebGL stack (three, fiber, drei, postprocessing) stays out of the server bundle and
 // out of the critical path: it is fetched and mounted only on the client.
@@ -53,6 +54,9 @@ function ContentScrim() {
       const vh = window.innerHeight || 1;
       const t = (window.scrollY / vh - SCRIM_START) / (SCRIM_END - SCRIM_START);
       const k = Math.min(1, Math.max(0, t));
+      // Hysteresis so the cheaper "dimmed" render mode toggles once per crossing, not per frame.
+      if (k >= DIM_ON) setSceneDimmed(true);
+      else if (k <= DIM_OFF) setSceneDimmed(false);
       const max = SCRIM_MAX[document.documentElement.dataset.side ?? ""] ?? SCRIM_DEFAULT;
       const o = Math.round(k * k * (3 - 2 * k) * max * 1000) / 1000;
       if (o !== last) {
@@ -64,6 +68,7 @@ function ContentScrim() {
     window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
     return () => {
+      setSceneDimmed(false);
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
     };
